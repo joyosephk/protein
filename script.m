@@ -51,4 +51,7 @@ nbins = 50;
 [histw, intervals] = histwc(positions, transitions_scores, nbins); 
 figure;
 bar(intervals,histw);
+grid on;
+xlabel('Positions');
+ylabel('Weighted Frequency of Transitions');
 
