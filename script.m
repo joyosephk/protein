@@ -1,4 +1,5 @@
 clear; clc; close all;
+addpath('functions');
 
 % Load data
 load('data.mat');
@@ -26,18 +27,28 @@ transitions(:,1)=[];
 id_remove = cellfun(@(x,y) isequal(x,y), transitions(:,1), transitions(:,2));
 transitions = transitions(~id_remove,:);
 positions = positions(~id_remove,:);
+
+% OPTIONAL: produce a histogram
+figure;
 hist(positions,50);
 xlabel('Positions');
 ylabel('Frequency of transitions');
 grid on;
 
-% % Write out to spreadsheet
+% OPTIONAL:  Write out to spreadsheet
 % output = horzcat(transitions, num2cell(positions));
 % T = cell2table(output,'VariableNames',{'First','Second','Position'});
 % writetable(T,'tabledata.dat');
 
+% Load scores data
+load('scores.mat');
+[~,idx1] = ismember(transitions(:,1),names);
+[~,idx2] = ismember(transitions(:,2),names);
+transitions_scores = diag(scores(idx1,idx2));
 
-
-
-
+% Generate weighted histogram
+nbins = 50;
+[histw, intervals] = histwc(positions, transitions_scores, nbins); 
+figure;
+bar(intervals,histw);
 
